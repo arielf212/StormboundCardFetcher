@@ -1,6 +1,9 @@
 import csv
 import difflib
+import os
 from discord.ext import commands
+
+# made by FireofGods
 
 bot = commands.Bot(command_prefix='?') # bot creation
 
@@ -26,13 +29,15 @@ def load_cards():
             name , link = row
             cards[name] = link
     return cards
+
 @bot.event
 async def on_message(message):
     if message.content.find('[[') != -1:
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
             await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list , n = 1)[0]])
+
 #main
 card_list = load_cards()
 print("done loading cards!")
-bot.run('NDYzMDk1MjAzMzY1MTI2MTU0.Dhre2A.Q9kY09phR10E6nTr1T0o47foDjY')
+bot.run(os.environ.get('BOT_TOKEN'))
