@@ -41,7 +41,7 @@ async def on_message(message):
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
             if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.5):
-                await bot.send_message(message.channel , card_list[])
+                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list ,  n = 1 , cutoff=0.5)[0]])
             else:
                 await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list , n = 1)[0]])
 
