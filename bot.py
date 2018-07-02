@@ -32,10 +32,18 @@ def load_cards():
 
 @bot.event
 async def on_message(message):
+    #variables
+    honor_cards = {'conflictor': 'Conflicted drakes' , 'frozenearth' : 'broken earth' ,'gale' : 'green gale' ,'wander' : 'wandering wyrms' ,
+                   'omer' : 'draconic roamer' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch'}
+
+    #the function
     if message.content.find('[[') != -1:
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
-            await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list , n = 1)[0]])
+            if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.5):
+                await bot.send_message(message.channel , card_list[])
+            else:
+                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list , n = 1)[0]])
 
 #main
 card_list = load_cards()
