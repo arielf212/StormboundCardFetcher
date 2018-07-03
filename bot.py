@@ -1,4 +1,5 @@
 import csv
+from fuzzywuzzy import fuzz
 import difflib
 import os
 from discord.ext import commands
@@ -41,12 +42,35 @@ async def on_message(message):
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
             if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.5):
+                # check if a card name is actually a honored person's name. if it is then get his card.
                 card = honor_cards[difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.5)[0]]
-                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list ,  n = 1 , cutoff=0.5)[0]])
+                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list.keys() ,  n = 1 , cutoff=0.5)[0]])
             else:
-                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list , n = 1)[0]])
+                max_ratio = (' ' , 0) # maximum score in ratio exam
+                max_partial = (' ' , 0) # maximum sort in partial ratio exam
+                max_partial
+                for entry in card_list:
+                    # lets check if an entry is "good enough" to be our card
+                    ratio = fuzz.ratio(card , entry)
+                    partial = fuzz.partial_ratio(card , entry)
+                    if ratio > max_ratio[1]:
+                        max_ratio = (entry, ratio)
+                        list_ratio = [max_ratio]
+                    elif ratio == max_ratio[1]:
+                        list_ratio.append((entry, ratio))
+                    if partial > max_partial[1]:
+                        max_partial = (entry, partial)
+                        list_partial = [max_partial]
+                    elif partial == max_partial[1]:
+                        list_partial.append((entry, partial))
+                #now lets find out what is our clossest match:
+                if max_partial[0][1] >= max_ratio[0][1]:
+                    await bot.send_message(message.channel , card_list[max_partial[0]])
+                else:
+                    await bot.send_message(message.channel , card_list[max_ratio[0]])
+
 
 #main
 card_list = load_cards()
 print("done loading cards!")
-bot.run(os.environ.get('BOT_TOKEN'))
+bot.run('NDYzMDk1MjAzMzY1MTI2MTU0.Dhre2A.Q9kY09phR10E6nTr1T0o47foDjY')
