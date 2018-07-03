@@ -34,7 +34,7 @@ def load_cards():
 @bot.event
 async def on_message(message):
     #variables
-    honor_cards = {'conflictor': 'Conflicted drakes' , 'frozenearth' : 'broken earth' ,'gale' : 'green gale' ,'wander' : 'wandering wyrms' ,
+    honor_cards = {'conflictor': 'Conflicted drakes' , 'frozenearth' : 'broken earth drakes' ,'gale' : 'green gale' ,'wander' : 'wandering wyrms' ,
                    'omer' : 'draconic roamers' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch'}
 
     #the function
@@ -44,7 +44,7 @@ async def on_message(message):
             if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65):
                 # check if a card name is actually a honored person's name. if it is then get his card.
                 card = honor_cards[difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65)[0]]
-                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list.keys() ,  n = 1 , cutoff=0.65)[0]])
+                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list,  n = 1 , cutoff=0.65)[0]])
             else:
                 max_ratio = (' ' , 0) # maximum score in ratio exam
                 max_partial = (' ' , 0) # maximum sort in partial ratio exam
