@@ -35,16 +35,16 @@ def load_cards():
 async def on_message(message):
     #variables
     honor_cards = {'conflictor': 'Conflicted drakes' , 'frozenearth' : 'broken earth' ,'gale' : 'green gale' ,'wander' : 'wandering wyrms' ,
-                   'omer' : 'draconic roamer' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch'}
+                   'omer' : 'draconic roamers' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch'}
 
     #the function
     if message.content.find('[[') != -1:
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
-            if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.5):
+            if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65):
                 # check if a card name is actually a honored person's name. if it is then get his card.
-                card = honor_cards[difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.5)[0]]
-                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list.keys() ,  n = 1 , cutoff=0.5)[0]])
+                card = honor_cards[difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65)[0]]
+                await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list.keys() ,  n = 1 , cutoff=0.65)[0]])
             else:
                 max_ratio = (' ' , 0) # maximum score in ratio exam
                 max_partial = (' ' , 0) # maximum sort in partial ratio exam
@@ -64,6 +64,7 @@ async def on_message(message):
                     elif partial == max_partial[1]:
                         list_partial.append((entry, partial))
                 #now lets find out what is our clossest match:
+                print(list_ratio,list_partial)
                 if max_partial[0][1] >= max_ratio[0][1]:
                     await bot.send_message(message.channel , card_list[max_partial[0]])
                 else:
