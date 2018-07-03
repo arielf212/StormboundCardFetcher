@@ -68,7 +68,11 @@ async def on_message(message):
                     await bot.send_message(message.channel , card_list[max_partial[0]])
                 else:
                     await bot.send_message(message.channel , card_list[max_ratio[0]])
-
+    elif message.content.startswith('!'):
+        #special commands
+        parameters = message.content.split(' ')
+        if parameters[0] == '!alive':
+            await bot.send_message(message.channel , 'im alive and well!')
 
 #main
 card_list = load_cards()
