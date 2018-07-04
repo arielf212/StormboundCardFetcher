@@ -48,7 +48,6 @@ async def on_message(message):
             else:
                 max_ratio = (' ' , 0) # maximum score in ratio exam
                 max_partial = (' ' , 0) # maximum sort in partial ratio exam
-                max_partial
                 for entry in card_list:
                     # lets check if an entry is "good enough" to be our card
                     ratio = fuzz.ratio(card , entry)
@@ -64,7 +63,6 @@ async def on_message(message):
                     elif partial == max_partial[1]:
                         list_partial.append((entry, partial))
                 #now lets find out what is our clossest match:
-                print(list_ratio,list_partial)
                 if max_partial[0][1] >= max_ratio[0][1]:
                     await bot.send_message(message.channel , card_list[max_partial[0]])
                 else:
