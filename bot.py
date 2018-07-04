@@ -7,7 +7,7 @@ from discord.ext import commands
 # made by FireofGods
 
 bot = commands.Bot(command_prefix='?') # bot creation
-
+card_list = []
 def get_card_name(text):
     '''takes a string and extracts card names from it. card names are encapsulated in [[xxxx]] where xxxx is the card name'''
     cards = [] # list of names of cards
@@ -22,6 +22,27 @@ def get_card_name(text):
         start = text.find('[[') # and the circle begins anew
     return cards
 
+def get_link(card):
+    max_ratio = (' ', 0)  # maximum score in ratio exam
+    max_partial = (' ', 0)  # maximum sort in partial ratio exam
+    for entry in card_list:
+        # lets check if an entry is "good enough" to be our card
+        ratio = fuzz.ratio(card, entry)
+        partial = fuzz.partial_ratio(card, entry)
+        if ratio > max_ratio[1]:
+            max_ratio = (entry, ratio)
+            list_ratio = [max_ratio]
+        elif ratio == max_ratio[1]:
+            list_ratio.append((entry, ratio))
+        if partial > max_partial[1]:
+            max_partial = (entry, partial)
+            list_partial = [max_partial]
+        elif partial == max_partial[1]:
+            list_partial.append((entry, partial))
+    if max_partial[1] > max_ratio[1]:
+        return card_list[max_partial[0]]
+    return card_list[max_ratio[0]]
+
 def load_cards():
     cards = {}
     with open('card_list' , 'r') as fcard_list:
@@ -34,7 +55,7 @@ def load_cards():
 @bot.event
 async def on_message(message):
     #variables
-    honor_cards = {'conflictor': 'Conflicted drakes' , 'frozenearth' : 'broken earth drakes' ,'gale' : 'green gale' ,'wander' : 'wandering wyrms' ,
+    honor_cards = {'conflictor': 'conflicted drakes' , 'frozenearth' : 'broken earth drakes' ,'gale' : 'greengale serpents' ,'wander' : 'wandering wyrms' ,
                    'omer' : 'draconic roamers' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch'}
 
     #the function
@@ -42,6 +63,7 @@ async def on_message(message):
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
             if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65):
+                print('yay')
                 # check if a card name is actually a honored person's name. if it is then get his card.
                 card = honor_cards[difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65)[0]]
                 await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list,  n = 1 , cutoff=0.65)[0]])
