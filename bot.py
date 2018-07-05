@@ -63,37 +63,28 @@ async def on_message(message):
         cards = get_card_name(message.content) # get the card name out of the message
         for card in cards:
             if difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65):
-                print('yay')
                 # check if a card name is actually a honored person's name. if it is then get his card.
                 card = honor_cards[difflib.get_close_matches(card , honor_cards , n=1 , cutoff=0.65)[0]]
                 await bot.send_message(message.channel , card_list[difflib.get_close_matches(card , card_list,  n = 1 , cutoff=0.65)[0]])
             else:
-                max_ratio = (' ' , 0) # maximum score in ratio exam
-                max_partial = (' ' , 0) # maximum sort in partial ratio exam
-                for entry in card_list:
-                    # lets check if an entry is "good enough" to be our card
-                    ratio = fuzz.ratio(card , entry)
-                    partial = fuzz.partial_ratio(card , entry)
-                    if ratio > max_ratio[1]:
-                        max_ratio = (entry, ratio)
-                        list_ratio = [max_ratio]
-                    elif ratio == max_ratio[1]:
-                        list_ratio.append((entry, ratio))
-                    if partial > max_partial[1]:
-                        max_partial = (entry, partial)
-                        list_partial = [max_partial]
-                    elif partial == max_partial[1]:
-                        list_partial.append((entry, partial))
-                #now lets find out what is our clossest match:
-                if max_partial[0][1] >= max_ratio[0][1]:
-                    await bot.send_message(message.channel , card_list[max_partial[0]])
-                else:
-                    await bot.send_message(message.channel , card_list[max_ratio[0]])
+                card = get_link(card)
+                await bot.send_message(message.channel , card)
     elif message.content.startswith('!'):
         #special commands
         parameters = message.content.split(' ')
         if parameters[0] == '!alive':
             await bot.send_message(message.channel , 'im alive and well!')
+        if parameters[0] == '!linkme':
+            cards = ' '.join(parameters[1: ]).split(',')
+            for card in cards:
+                if difflib.get_close_matches(card, honor_cards, n=1, cutoff=0.65):
+                    # check if a card name is actually a honored person's name. if it is then get his card.
+                    card = honor_cards[difflib.get_close_matches(card, honor_cards, n=1, cutoff=0.65)[0]]
+                    await bot.send_message(message.channel,
+                                           card_list[difflib.get_close_matches(card, card_list, n=1, cutoff=0.65)[0]])
+                else:
+                    card = get_link(card)
+                    await bot.send_message(message.channel, card)
 
 #main
 card_list = load_cards()
