@@ -56,7 +56,8 @@ def load_cards():
 async def on_message(message):
     #variables
     honor_cards = {'conflictor': 'conflicted drakes' , 'frozenearth' : 'broken earth drakes' ,'gale' : 'greengale serpents' ,'wander' : 'wandering wyrms' ,
-                   'omer' : 'draconic roamers' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch'}
+                   'omer' : 'draconic roamers' , 'dan su' : 'dangerous suitors' , 'spare' : 'spare dragonlings' , 'ludo': 'ludic matriarch' , 'q.q' : 'archdruid earyn'}
+    # note: q.q's card isnt really his card, but I still gave it to him
 
     #the function
     if message.content.find('[[') != -1:
