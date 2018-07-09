@@ -91,4 +91,4 @@ async def on_message(message):
 #main
 card_list = load_cards()
 print("done loading cards!")
-bot.run('NDYzMDk1MjAzMzY1MTI2MTU0.Dhre2A.Q9kY09phR10E6nTr1T0o47foDjY')
+bot.run(os.environ.get('BOT_TOKEN'))
